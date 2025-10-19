@@ -15,6 +15,25 @@ if project_root not in sys.path:
 
 from ultralytics import YOLO
 
+def check_training_data():
+    """Проверяет наличие данных для обучения"""
+    required_folders = [
+        'data/images/train/normal',
+        'data/images/train/clavicle_fracture',
+        'data/images/train/foreign_body'
+    ]
+    
+    total_files = 0
+    for folder in required_folders:
+        if os.path.exists(folder):
+            files = [f for f in os.listdir(folder) if f.lower().endswith(('.jpg', '.jpeg', '.png'))]
+            total_files += len(files)
+            print(f"📁 {folder}: {len(files)} файлов")
+        else:
+            print(f"❌ {folder}: папка не существует")
+    
+    return total_files > 0
+
 def main():
     print("🎯 ЗАПУСК КЛАССИФИКАЦИИ CHEST X-RAY")
     print("=" * 50)
@@ -25,9 +44,14 @@ def main():
     print("- Возвращает: normal / clavicle_fracture / foreign_body")
     print("- НЕ ищет bounding boxes!")
     
-    # Проверяем конфиг
-    if not os.path.exists('configs/classification_config.yaml'):
-        print("❌ Конфиг классификации не найден!")
+    # Проверяем данные
+    print("\n🔍 ПРОВЕРКА ДАННЫХ...")
+    if not check_training_data():
+        print("\n❌ НЕТ ДАННЫХ ДЛЯ ОБУЧЕНИЯ!")
+        print("💡 Загрузите изображения в папки:")
+        print("   data/images/train/normal/")
+        print("   data/images/train/clavicle_fracture/")
+        print("   data/images/train/foreign_body/")
         return
     
     # Проверяем GPU
@@ -36,23 +60,22 @@ def main():
     
     # Загружаем модель для классификации
     print("📦 Загружаем YOLOv8 для классификации...")
-    model = YOLO('yolov8n-cls.pt')  # Модель для классификации!
+    model = YOLO('yolov8n-cls.pt')
     
     # Обучаем модель классификации
     print("🎯 НАЧИНАЕМ ОБУЧЕНИЕ КЛАССИФИКАЦИИ...")
     try:
         results = model.train(
-            data='configs/classification_config.yaml',
+            data='./data',  # Указываем папку с данными, а не файл конфига
             epochs=10,
-            imgsz=224,  # Стандартный размер для классификации
+            imgsz=224,
             batch=8,
             device=device,
             workers=0,
             lr0=0.001,
             patience=3,
             save=True,
-            exist_ok=True,
-            verbose=True
+            exist_ok=True
         )
         
         print("✅ Обучение классификации завершено!")
@@ -60,7 +83,7 @@ def main():
         
     except Exception as e:
         print(f"❌ Ошибка при обучении классификации: {e}")
-        print("💡 Это нормально без реальных данных")
+        print("💡 Проверьте что в папках есть изображения")
 
 if __name__ == "__main__":
     main()

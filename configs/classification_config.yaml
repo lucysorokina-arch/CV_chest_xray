@@ -1,9 +1,14 @@
-imbalance_strategy: moderate_imbalance
-names:
-  0: normal
-  1: clavicle_fracture
-  2: foreign_body
+# Classification config for chest X-ray pathology detection
 path: ./data
-test: images/test
 train: images/train
 val: images/val
+test: images/test
+
+# Classification classes - WHOLE IMAGE classification
+names:
+  0: normal
+  1: clavicle_fracture  
+  2: foreign_body
+
+# Classification specific settings
+task: classify
