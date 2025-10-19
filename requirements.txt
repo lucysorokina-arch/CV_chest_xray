@@ -4,7 +4,13 @@ torchvision>=0.10.0
 opencv-python
 numpy
 pandas
-<<<<<<< HEAD
 matplotlib
-=======
->>>>>>> 77831f2994a1ef3c71ee54aa626a5a190a22b015
+seaborn
+scikit-learn
+imbalanced-learn
+albumentations
+tqdm
+psutil
+Pillow
+requests
+pyyaml
