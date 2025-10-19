@@ -1,7 +1,7 @@
 task: classify
 mode: train
 model: yolov8n-cls.pt
-data: configs/classification_config.yaml
+data: ./data
 epochs: 10
 time: null
 patience: 3
