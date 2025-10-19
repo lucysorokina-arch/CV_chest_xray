@@ -1,16 +1,16 @@
 
-# Dataset
-path: /content/CV_chest_xray/data
+# Optimized dataset for chest x-ray classification
+path: ./data/images
 train: train
 val: val
 test: test
 
-# Classes
+# Classification classes
 names:
   0: normal
   1: clavicle_fracture  
   2: foreign_body
 
-# Metadata
+# Model settings
 nc: 3
 task: classify
